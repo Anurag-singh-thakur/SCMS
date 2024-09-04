@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import './Class.css'; 
+import './Class.css';
+import image from '../../assets/logo.jpg';
 import Create from '../../components/Create/Create';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import noticeAtom from '../../atom/NoticeAtom.js';
@@ -8,11 +9,26 @@ import userAtom from '../../atom/UserAtom.js';
 import subjectAtom from '../../atom/SubjectAtom.js';
 import { LuDelete } from "react-icons/lu";
 import { FaShare } from "react-icons/fa6";
+import { RiChatSmile3Line } from "react-icons/ri";
+
+const ImageModal = ({ imageSrc, onClose }) => {
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <img src={imageSrc} alt="Notice" />
+      </div>
+    </div>
+  );
+};
+
 const Class = () => {
   const [isCreateVisible, setIsCreateVisible] = useState(false);
-  const [isShareVisible, setIsShareVisible] = useState(false); // State for share button
+  const [isShareVisible, setIsShareVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+  const [assignments, setAssignments] = useState([]);
   const navigate = useNavigate();
-  const { id: subjectId } = useParams(); 
+  const { id: subjectId } = useParams();
   const [Notice, SetNotice] = useRecoilState(noticeAtom);
   const user = useRecoilValue(userAtom);
   const [Subjects, setSubjects] = useRecoilState(subjectAtom);
@@ -38,7 +54,7 @@ const Class = () => {
       const response = await fetch(`/api/s/notice/${subjectId}/${noticeId}`, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
       });
       const data = await response.json();
@@ -52,7 +68,7 @@ const Class = () => {
   };
 
   useEffect(() => {
-    const getsubject = async () => {
+    const getSubject = async () => {
       try {
         const response = await fetch(`/api/s/${user._id}`);
         const data = await response.json();
@@ -62,7 +78,7 @@ const Class = () => {
         console.error(error);
       }
     };
-    getsubject();
+    getSubject();
   }, [user._id]);
 
   const handleCreateButtonClick = () => {
@@ -71,12 +87,20 @@ const Class = () => {
 
   const handleShareButtonClick = () => {
     setIsShareVisible(!isShareVisible);
-    // Placeholder for share functionality
     alert('Share functionality not implemented yet');
   };
 
   const handleBookClick = (id) => {
-    navigate(`/ebook/${id}`);  
+    navigate(`/ebook/${id}`);
+  };
+
+  const handleNoticeClick = (imgSrc) => {
+    setSelectedImage(imgSrc);
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
   };
 
   return (
@@ -109,29 +133,43 @@ const Class = () => {
         </div>
       </aside>
       <main className="content">
-        {Notice.map((notice) => (
-          <section key={notice._id} className="notice">
-            <h2>{notice.NoticeText}</h2>
-            <button className="delete-button" onClick={() => handleDeleteNotice(notice._id)}>
-              <LuDelete />
-            </button>
-            <img className='noticeimage' src={notice.img} alt={notice.title} />
-          </section>
-        ))}
+        <section className="notices-section">
+          {Notice.map((notice) => (
+            <section key={notice._id} className="notice">
+              <h2>{notice.NoticeText}</h2>
+              <button className="delete-button" onClick={() => handleDeleteNotice(notice._id)}>
+                <LuDelete />
+              </button>
+              <img className='noticeimage' src={notice.img} alt={notice.title} onClick={() => handleNoticeClick(notice.img)} />
+            </section>
+          ))}
+        </section>
+        <section className="assignments-section">
+          <div className="assignment-card">
+            <button className="assignment-delete-button"> <LuDelete /></button>
+            <img className="assignment-image" src={image} alt="Assignment Heading" onClick={() => handleNoticeClick(image)} />
+            <div className="assignment-text">
+              <h2>Assignment title</h2>
+              <p className='assignment-description'>Assignment description</p>
+            </div>
+          </div>
+        </section>
       </main>
       <div className="create">
-        <button className='create-button' onClick={handleCreateButtonClick}>
-          Create
-        </button>
+        <button className='create-button' onClick={handleCreateButtonClick}> Create </button>
       </div>
-      <div className="share">
+      <div className="share-container">
+        <button className='chat-button' onClick={() => alert('Chat functionality not implemented yet')}>
+          <RiChatSmile3Line />
+        </button>
         <button className='share-button' onClick={handleShareButtonClick}>
-        <FaShare />
+          <FaShare />
         </button>
       </div>
-      {isCreateVisible && <Create subjectId={subjectId} />}  
+      {isCreateVisible && <Create subjectId={subjectId} />}
+      {isModalVisible && <ImageModal imageSrc={selectedImage} onClose={handleCloseModal} />}
     </div>
   );
-}
+};
 
 export default Class;

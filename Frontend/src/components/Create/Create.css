@@ -38,6 +38,7 @@
 }
 
 .upload-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-start; /* Align to the left */
@@ -45,13 +46,23 @@
 }
 
 .upload-icon {
+  cursor: pointer;
   width: 150px; /* Increased width */
   height: 150px; /* Increased height */
   cursor: pointer;
   object-fit: contain;
   margin-right: 20px; /* Add some space between the icon and the image */
 }
-
+.preview-container {
+  display: flex;
+  background-color: green;
+  flex-wrap: wrap;
+}
+.file-preview {
+  margin: 5px;
+  max-width: 200px;
+  max-height: 200px;
+}
 #new {
   width: 150px; /* Increased width */
   height: 150px; /* Increased height */

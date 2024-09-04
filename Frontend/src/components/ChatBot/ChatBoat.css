@@ -1,11 +1,11 @@
-/* ChatBot Icon */
+
 .chatBot-icon {
   position: fixed;
   bottom: 100px;
   right: 30px;
   font-size: 40px;
   cursor: pointer;
-  color: white;
+  color: #858585;
   padding: 16px;
   border: none;
   border-radius: 50%; 

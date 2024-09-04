@@ -95,9 +95,6 @@ const Class = ({ onNextClassTime }) => {
         }
         handlePopupClose();
     };
-
-
-
     const getNextClassTime = () => {
         const now = new Date();
         const currentTime = now.getHours() * 60 + now.getMinutes();
@@ -127,7 +124,7 @@ const Class = ({ onNextClassTime }) => {
         navigate(`/subject/${id}`);
     };
 
-    const deleteClass = async(id) => {
+    const deleteClass = async (id) => {
         try {
             const res = await fetch(`/api/s/${id}`, {
                 method: 'DELETE',
@@ -161,12 +158,12 @@ const Class = ({ onNextClassTime }) => {
                             <div className="subject-header">
                                 <h3 onClick={() => handleCardClick(classItem._id)}>{classItem.sname}</h3>
                                 {classItem && classItem.teacher === user.username && (
-                                  <MdDelete
-                                    className="delete-icon"
-                                    onClick={() => deleteClass(classItem._id)}
-                                  />  
+                                    <MdDelete
+                                        className="delete-icon"
+                                        onClick={() => deleteClass(classItem._id)}
+                                    />
                                 )}
-                                
+
                             </div>
                             <div className="class-info">
                                 <img src={profileIcon} alt="Profile Icon" className="profile-icon" />
