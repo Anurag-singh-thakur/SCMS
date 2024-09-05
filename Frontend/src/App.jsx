@@ -11,6 +11,7 @@ import Class from './components/Class/Class';
 import Chatbot from './components/ChatBot/Chatbot';
 import Ebook from './components/Ebook/Ebook';
 import Loader from './components/Loader/Loader';
+import JoinSubject from './components/JoinSubject/JoinSubject'; 
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -26,15 +27,15 @@ const App = () => {
           <Route path="/features" element={<Features />} />
           <Route path="/about" element={<About />} />
           <Route path="/quizzes" element={<Quizzes />} />
-          <Route path="/profile" element={<Profile/>} />
-          <Route path="/subject/:id" element={<Class  />} />
-          <Route path="/ebook/:id" element={<Ebook/>} />  
-          <Route path="loader" element={<Loader/>} />  
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/subject/:id" element={<Class />} />
+          <Route path="/ebook/:id" element={<Ebook />} />  
+          <Route path="/join/:id" element={<JoinSubject />} /> 
+          <Route path="loader" element={<Loader />} />  
         </Routes>
         <Chatbot />
-       
       </> 
-    </Router> 
+    </Router>
   );
 };
 

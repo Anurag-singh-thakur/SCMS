@@ -60,7 +60,7 @@ const GetSubject = async (req, res) => {
         const subjects = await Subject.find({
             $or: [
                 { teacher: username }, 
-                { 'students.stuname': username }   
+                { 'students.stuId': userId }   
             ]
         });
 
@@ -95,23 +95,30 @@ const AddNotice = async (req, res) => {
         }
 
         if (imgUrl) {
-            const uploadResponse = await cloudinary.uploader.upload(imgUrl)
-            imgUrl = uploadResponse.url
+            const uploadResponse = await cloudinary.uploader.upload(imgUrl);
+            imgUrl = uploadResponse.url;
         }
+        
         const newNotice = {
+            _id: new mongoose.Types.ObjectId(), 
             NoticeText: textContent,
-            img: imgUrl || null   
+            img: imgUrl || null
         };
 
         subject.notice.push(newNotice);
         await subject.save();
-        return res.status(201).json({ message: "Notice added successfully" });
+
+        return res.status(201).json({ 
+            _id: newNotice._id,
+            NoticeText: newNotice.NoticeText,
+            img: newNotice.img
+        });
     } catch (error) {
-        // Log error and send server error response
         console.error('Error adding notice:', error);
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
 
 const GetNotice = async (req, res) => {
     try {
@@ -176,4 +183,30 @@ const deleteSubject = async(req,res) => {
         console.log(error)
     }
 }
-export {Addsubject,GetSubject,AddNotice,GetNotice,deleteSubject,deleteNotice};
+
+const addstudent = async (req, res) => {
+    try {
+        const userId = req.user._id;  
+        const { subjectId } = req.params;
+
+        const subject = await Subject.findById(subjectId);
+        if (!subject) {
+            return res.status(404).json({ error: 'Subject not found' });
+        }
+
+        const userExists = subject.students.some(student => student.stuId.toString() === userId.toString());
+        if (userExists) {
+            return res.status(400).json({ error: 'User already joined this subject' });
+        }
+
+        subject.students.push({ stuId: userId });
+        await subject.save();
+
+        return res.status(200).json({ message: 'User joined the subject successfully' });
+    } catch (error) {
+        console.error('Error joining subject:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export {Addsubject,GetSubject,AddNotice,GetNotice,deleteSubject,deleteNotice,addstudent};

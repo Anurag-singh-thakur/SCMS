@@ -30,6 +30,7 @@ const Class = ({ onNextClassTime }) => {
                     credentials: 'include',
                 });
                 const data = await response.json();
+                console.log(data)
                 setSubject(data);
             } catch (error) {
                 console.error(error);
@@ -84,11 +85,11 @@ const Class = ({ onNextClassTime }) => {
             });
 
             const data = await response.json();
-
-            if (data.err) {
-                console.error("Failed to add subject");
+            if (response.ok) {
+                setSubject((prevSubjects) => [...prevSubjects, data.subject]);  
+                handlePopupClose();
             } else {
-                setSubject((prevSubjects) => [...prevSubjects, data]);
+                console.error("Failed to add subject:", data.error || "Unknown error");
             }
         } catch (error) {
             console.error("Error:", error);

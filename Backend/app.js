@@ -6,6 +6,7 @@ import UserRoute from './Routes/UserRoute.js';
 import SubjectRoute from './Routes/SubjectRoute.js';
 import { v2 as cloudinary } from "cloudinary";
 import path from "path";
+import helpRoute from './Routes/HelpRoute.js';
 
 const app = express();
 
@@ -28,7 +29,7 @@ app.use(cookieParser());
 
 app.use('/api/user',UserRoute)
 app.use('/api/s',SubjectRoute)
-
+app.use('/api/generate',helpRoute);
 
 
 const port = process.env.PORT || 5000;
