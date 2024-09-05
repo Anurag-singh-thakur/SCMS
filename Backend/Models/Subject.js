@@ -26,8 +26,8 @@ const SubjectSchema = new mongoose.Schema({
         default: ''
     },
     students: [{
-        stuname:{
-            type: String,
+        stuId:{
+            type: mongoose.Schema.Types.ObjectId,
             default: null
         }
     }]

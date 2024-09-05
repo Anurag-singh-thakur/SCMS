@@ -4,4 +4,4 @@ const noticeAtom = atom({
     key: 'notice',
     default: [] 
 });
-export default noticeAtom;
+export default noticeAtom;  

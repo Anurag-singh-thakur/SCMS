@@ -10,12 +10,13 @@ import subjectAtom from '../../atom/SubjectAtom.js';
 import { LuDelete } from "react-icons/lu";
 import { FaShare } from "react-icons/fa6";
 import { RiChatSmile3Line } from "react-icons/ri";
+import Loader from '../../components/Loader/Loader';  
 
 const ImageModal = ({ imageSrc, onClose }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <img src={imageSrc} alt="Notice" />
+        {imageSrc && <img src={imageSrc} alt="Notice" />}
       </div>
     </div>
   );
@@ -27,6 +28,8 @@ const Class = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   const [assignments, setAssignments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [shareableLink, setShareableLink] = useState('');
   const navigate = useNavigate();
   const { id: subjectId } = useParams();
   const [Notice, SetNotice] = useRecoilState(noticeAtom);
@@ -38,16 +41,19 @@ const Class = () => {
       navigate('/');
     }
     const getNotice = async () => {
+      setLoading(true);
       try {
         const response = await fetch(`/api/s/subject/${subjectId}`);
         const data = await response.json();
         SetNotice(data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
     getNotice();
-  }, [subjectId]);
+  }, [subjectId, SetNotice]);
 
   const handleDeleteNotice = async (noticeId) => {
     try {
@@ -86,9 +92,21 @@ const Class = () => {
   };
 
   const handleShareButtonClick = () => {
-    setIsShareVisible(!isShareVisible);
-    alert('Share functionality not implemented yet');
+    const link = `${window.location.origin}/join/${subjectId}`;
+    setShareableLink(link);
+    setIsShareVisible(true);
   };
+  
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(shareableLink)
+      .then(() => {
+        alert('Link copied to clipboard!');
+      })
+      .catch((error) => {
+        console.error('Failed to copy link:', error);
+      });
+  };
+  
 
   const handleBookClick = (id) => {
     navigate(`/ebook/${id}`);
@@ -105,6 +123,7 @@ const Class = () => {
 
   return (
     <div className="class-container">
+      {loading && <Loader />}
       <aside className="sidebar">
         <div className="classes-section">
           <h3>Classes</h3>
@@ -117,7 +136,7 @@ const Class = () => {
         <div className="ebooks-section">
           <h3>eBooks</h3>
           <ul>
-            <li onClick={() => handleBookClick('1')}>
+            <li key="ebook-1" onClick={() => handleBookClick('1')}>
               <div className="ebook-details">
                 <div className="ebook-row">
                   <span className="ebook-name">Algebra</span>
@@ -138,16 +157,16 @@ const Class = () => {
             <section key={notice._id} className="notice">
               <h2>{notice.NoticeText}</h2>
               <button className="delete-button" onClick={() => handleDeleteNotice(notice._id)}>
-                <LuDelete />
+                {Subjects.teacher === user.username ? <LuDelete /> : null}
               </button>
-              <img className='noticeimage' src={notice.img} alt={notice.title} onClick={() => handleNoticeClick(notice.img)} />
+              {notice.img ? <img className='noticeimage' src={notice.img} alt={notice.title} onClick={() => handleNoticeClick(notice.img)} /> : null}
             </section>
           ))}
         </section>
         <section className="assignments-section">
           <div className="assignment-card">
             <button className="assignment-delete-button"> <LuDelete /></button>
-            <img className="assignment-image" src={image} alt="Assignment Heading" onClick={() => handleNoticeClick(image)} />
+            {image ? <img className="assignment-image" src={image} alt="Assignment Heading" onClick={() => handleNoticeClick(image)} /> : null}
             <div className="assignment-text">
               <h2>Assignment title</h2>
               <p className='assignment-description'>Assignment description</p>
@@ -166,6 +185,16 @@ const Class = () => {
           <FaShare />
         </button>
       </div>
+      {isShareVisible && (
+        <div className="share-popup">
+          <div className="share-popup-content">
+            <p>Share this link:</p>
+            <input type="text" value={shareableLink} readOnly />
+            <button onClick={handleCopyToClipboard}>Copy</button>
+            <button onClick={() => setIsShareVisible(false)}>Close</button>
+          </div>
+        </div>
+      )}
       {isCreateVisible && <Create subjectId={subjectId} />}
       {isModalVisible && <ImageModal imageSrc={selectedImage} onClose={handleCloseModal} />}
     </div>
@@ -173,3 +202,4 @@ const Class = () => {
 };
 
 export default Class;
+
