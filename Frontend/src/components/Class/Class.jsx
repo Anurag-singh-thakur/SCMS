@@ -11,7 +11,9 @@ import { LuDelete } from "react-icons/lu";
 import { FaShare } from "react-icons/fa6";
 import { RiChatSmile3Line } from "react-icons/ri";
 import Loader from '../../components/Loader/Loader';  
-
+import { SiGooglemeet } from "react-icons/si";
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { RiInformation2Line } from "react-icons/ri";
 const ImageModal = ({ imageSrc, onClose }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -121,6 +123,9 @@ const Class = () => {
     setIsModalVisible(false);
   };
 
+ 
+ 
+
   return (
     <div className="class-container">
       {loading && <Loader />}
@@ -152,11 +157,18 @@ const Class = () => {
         </div>
       </aside>
       <main className="content">
+        <div className="navbar2">
+          <button className="chat-button" onClick={() => navigate('/chat')}><RiChatSmile3Line /></button>
+          <button className="share-button"onClick={handleShareButtonClick}><FaShare/></button>
+          <button className="chat-button"  onClick={() => alert('video call functionality not implemented yet')}><SiGooglemeet /></button>
+          <button className="create-button" onClick={handleCreateButtonClick}><IoIosAddCircleOutline /></button>
+          <button className="info-button" onClick={()=>navigate('/info')} ><RiInformation2Line /></button>
+        </div>
         <section className="notices-section">
           {Notice.map((notice) => (
             <section key={notice._id} className="notice">
               <h2>{notice.NoticeText}</h2>
-              <button className="delete-button" onClick={() => handleDeleteNotice(notice._id)}>
+              <button className="notice-delete-button" onClick={() => handleDeleteNotice(notice._id)}>
                 {Subjects.teacher === user.username ? <LuDelete /> : null}
               </button>
               {notice.img ? <img className='noticeimage' src={notice.img} alt={notice.title} onClick={() => handleNoticeClick(notice.img)} /> : null}
@@ -174,26 +186,19 @@ const Class = () => {
           </div>
         </section>
       </main>
-      <div className="create">
-        <button className='create-button' onClick={handleCreateButtonClick}> Create </button>
-      </div>
-      <div className="share-container">
-        <button className='chat-button' onClick={() => alert('Chat functionality not implemented yet')}>
-          <RiChatSmile3Line />
-        </button>
-        <button className='share-button' onClick={handleShareButtonClick}>
-          <FaShare />
-        </button>
-      </div>
+      
       {isShareVisible && (
-        <div className="share-popup">
-          <div className="share-popup-content">
-            <p>Share this link:</p>
-            <input type="text" value={shareableLink} readOnly />
-            <button onClick={handleCopyToClipboard}>Copy</button>
-            <button onClick={() => setIsShareVisible(false)}>Close</button>
-          </div>
+      <div className="share-popup">
+      <div className="share-popup-content">
+        <p>Share this link:</p>
+        <input type="text" value={shareableLink} readOnly />
+        <div className="share-popup-buttons">
+          <button onClick={handleCopyToClipboard}>Copy</button>
+          <button onClick={() => setIsShareVisible(false)}>Close</button>
         </div>
+      </div>
+    </div>
+    
       )}
       {isCreateVisible && <Create subjectId={subjectId} />}
       {isModalVisible && <ImageModal imageSrc={selectedImage} onClose={handleCloseModal} />}
@@ -202,4 +207,3 @@ const Class = () => {
 };
 
 export default Class;
-

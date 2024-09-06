@@ -61,7 +61,6 @@ const Chatbot = () => {
   };
 
   const parseText = (text) => {
-    // Convert markdown-like text to HTML using marked
     return { __html: marked(text) };
   };
 

@@ -1,0 +1,81 @@
+#navbar2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 2px solid #444;
+  z-index: 500;
+  box-sizing: border-box;
+}
+
+#navbar2-btn {
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 25px;
+  transition: 0.3s ease-in-out;
+}
+
+#navbar2-btn:hover {
+  transform: scale(1.1);
+}
+
+#chat-button {
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 25px;
+  transition: 0.3s ease-in-out;
+}
+
+#share-button {
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 25px;
+  transition: 0.3s ease-in-out;
+}
+
+#meet-button {
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 25px;
+  transition: 0.3s ease-in-out;
+}
+
+#info-button {
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 25px;
+  transition: 0.3s ease-in-out;
+}
+
+#create-button {
+  background: transparent;
+  color: white;
+  font-weight: bolder;
+  border: none;
+  cursor: pointer;
+  font-size: 25px;
+  transition: 0.3s ease-in-out;
+}
+
+#create-button:hover,
+#chat-button:hover,
+#share-button:hover,
+#meet-button:hover,
+#info-button:hover {
+  transform: scale(1.1);
+}

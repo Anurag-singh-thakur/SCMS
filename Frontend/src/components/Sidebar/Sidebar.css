@@ -1,0 +1,69 @@
+/* Sidebar container */
+.sidebar {
+    flex: 1;
+    width: 20%;
+    background-color: #333;
+    padding: 20px;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    overflow-y: auto;
+  }
+  
+  /* Sidebar headings */
+  .sidebar h3 {
+    margin-bottom: 20px;
+    color: white;
+    font-size: 22px;
+  }
+  
+  /* List styles for classes and ebooks sections */
+  .classes-section ul,
+  .ebooks-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .classes-section ul li,
+  .ebooks-section ul li {
+    border: none;
+    margin: 20px 0;
+    padding: 15px;
+    font-size: 18px;
+    background-color: #444;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .classes-section ul li:hover,
+  .ebooks-section ul li:hover {
+    border: 2px solid blue;
+    background-color: #555;
+  }
+  
+  /* Ebook details styling */
+  .ebook-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .ebook-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .ebook-name,
+  .ebook-subject,
+  .ebook-teacher,
+  .ebook-status {
+    font-size: 16px;
+  }
+  
+  .ebook-status {
+    font-weight: bold;
+  }
+  

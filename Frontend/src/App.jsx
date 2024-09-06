@@ -12,16 +12,21 @@ import Chatbot from './components/ChatBot/Chatbot';
 import Ebook from './components/Ebook/Ebook';
 import Loader from './components/Loader/Loader';
 import JoinSubject from './components/JoinSubject/JoinSubject'; 
+import Create from './components/Create/Create';
+import Sidebar from './components/Sidebar/Sidebar';
+import Info from './components/Info/Info';
+import Chat from './components/Chat/Chat';
+import Navbar2 from './components/Navbar2/Navbar2';
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
-
+ 
   return (
     <Router>
       <>
         <Navbar setShowLogin={setShowLogin} />
         {showLogin && <Login setShowLogin={setShowLogin} />}
-      
+    
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/features" element={<Features />} />
@@ -31,7 +36,11 @@ const App = () => {
           <Route path="/subject/:id" element={<Class />} />
           <Route path="/ebook/:id" element={<Ebook />} />  
           <Route path="/join/:id" element={<JoinSubject />} /> 
-          <Route path="loader" element={<Loader />} />  
+          {/* <Route path="sidebar" element={<Sidebar/>} />   */}
+          <Route path="navbar2" element={<Navbar2/>} />  
+          <Route path="/info" element={<Info/>} />  
+          <Route path="/chat" element={<Chat/>} />  
+          
         </Routes>
         <Chatbot />
       </> 

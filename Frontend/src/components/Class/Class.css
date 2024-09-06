@@ -3,61 +3,85 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 .share-popup {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  background: rgba(0, 0, 0, 0.6); 
+  z-index: 9999; 
 }
+
 
 .share-popup-content {
-  background: white;
-  padding: 20px;
+  background-color: #2e2e2e;
+  color: #f5f5f5; 
   border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 300px;
-}
-
-.share-popup-content input {
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 500px;
   width: 100%;
-  margin-bottom: 10px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
 }
 
-.share-popup-content button {
-  background: #007bff;
-  color: white;
-  border: none;
+.share-popup-content input[type="text"] {
+  width: calc(100% - 20px); 
   padding: 10px;
-  margin: 5px;
+  margin: 10px 0;
+  border: 1px solid #333; 
   border-radius: 4px;
-  cursor: pointer;
+  background-color: #1e1e1e;
+  color: #f5f5f5; 
+  font-size: 16px;
 }
 
-.share-popup-content button:hover {
-  background: #0056b3;
+.share-popup-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
+
+.share-popup-buttons button {
+  background-color: #4caf50; 
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.share-popup-buttons button:hover {
+  background-color: #45a049; 
+}
+
+/* Close button */
+.share-popup-buttons button:last-child {
+  background-color: #f44336; 
+}
+
+.share-popup-buttons button:last-child:hover {
+  background-color: #e53935; 
+}
+
+
 
 .class-container {
   display: flex;
   height: 100vh;
-  padding: 20px;
+
   background-color: #212121;
   color: white;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .sidebar {
+  height: 100vh;
   flex: 1;
   width: 20%;
   background-color: #333;
@@ -123,23 +147,55 @@
 }
 
 .content {
-  flex: 3;
+  flex: 2;
   display: flex;
   width: 80%;
   border-left: 2px solid white;
   padding: 20px;
   background-color: #212121;
   gap: 20px;
+  position: relative;
+}
+
+.navbar2 {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 2px solid #444;
+  z-index: 500;
+  box-sizing: border-box;
+}
+
+.navbar2-btn {
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+.navbar2-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .notices-section {
   border-right: 2px solid white;
   padding-right: 20px;
-  flex: 2; 
+  flex: 2;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 66%;
+  width: 55%;
+  position: relative;
+  padding-top: 70px;
 }
 
 .assignments-section {
@@ -147,7 +203,9 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 33%; 
+  width: 33%;
+  position: relative;
+  padding-top: 70px;
 }
 
 .assignment-card {
@@ -172,31 +230,47 @@
   gap: 15px;
   position: relative;
 }
-
-.noticeimage, .assignment-image {
+.notice-delete-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.noticeimage,
+.assignment-image {
   width: 100px;
   height: 100px;
   object-fit: cover;
   border-radius: 8px;
   cursor: pointer;
 }
-.noticeimage{
+
+.noticeimage {
   margin-right: 20px;
 }
-.notice h2, .assignment-text h2 {
+
+.notice h2,
+.assignment-text h2 {
   margin: 0;
   color: black;
   font-size: 1.5em;
   line-height: 1.2;
 }
 
-.notice p, .assignment-description {
+.notice p,
+.assignment-description {
   margin: 0;
   font-size: 16px;
   color: black;
 }
 
-.delete-button {
+
+
+.assignment-delete-button {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -206,81 +280,74 @@
   cursor: pointer;
   transition: color 0.3s ease;
 }
-.assignment-delete-button{
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: transparent;
-  border: none;
-  font-size: 1.2em;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-.delete-button:hover {
-  color: #ff1a1a;
-  transform: scale(1.02);
-}
-.assignment-delete-button:hover{
+
+
+.assignment-delete-button:hover {
   color: #ff1a1a;
   transform: scale(1.02);
 }
 
-.create {
-  position: fixed;
-  bottom: 40px;
-  right: 40px;
-  z-index: 1000;
-}
 
 .create-button {
-  padding: 15px 20px;
-  background-color: green;
+  background: transparent;
   color: white;
+  font-weight: bolder;
   border: none;
-  border-radius: 10px;
   cursor: pointer;
+  font-size: 25px;
+  transition: 0.3s  ease-in-out;
 }
 
-.share {
-  position: fixed;
-  bottom: 50px;
-  left: 50px;
-  z-index: 1000;
-}
-.share-container{
-  position: fixed;
-  bottom: 50px;
-  left: 50px;
-  z-index: 1000;
- display: flex;
-  flex-direction: row;
-  gap: 30px;
-}
-.chat-button{
+
+
+.chat-button {
   background: transparent;
   color: white;
   border: none;
   cursor: pointer;
-  font-size: 1.2em;
-  font-size: 20px;
-
+  font-size: 25px;
+  transition: 0.3s  ease-in-out;
 }
+.info-button
+{
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 25px;
+  transition: 0.3s  ease-in-out;
+}
+
 .share-button {
   background: transparent;
   color: white;
   border: none;
   cursor: pointer;
-  font-size: 20px;
-  font-size: 1.2em;
+  font-size: 25px;
+  transition: 0.3s  ease-in-out;
+}
+.meet-button {
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 25px;
+  transition: 0.3s  ease-in-out;
 }
 
 .share-button:hover {
   transform: scale(1.1);
 }
-.chat-button:hover{
+
+.chat-button:hover {
   transform: scale(1.1);
 }
-
+.meet-button:hover{
+  transform: scale(1.1);
+}
+.info-button:hover{
+  transform: scale(1.1);
+}
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -315,8 +382,6 @@
   margin: 0 auto;
 }
 
-
-/* gpt code */
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
@@ -328,31 +393,40 @@
     border-left: none;
   }
 
-  .notices-section, .assignments-section {
+  .notices-section,
+  .assignments-section {
     width: 100%;
   }
 
-  .assignment-card, .notice {
+  .assignment-card,
+  .notice {
     width: 100%;
     margin: 10px 0;
     font-size: 16px;
   }
 
-  .assignment-card img, .noticeimage {
+  .assignment-card img,
+  .noticeimage {
     width: 80px;
     height: 80px;
   }
-}
 
-/* Styles when Create button is visible */
-.create-mode .assignment-card, .create-mode .notice {
+  .navbar2 {
+    width: 100%;
+    top: 50px;
+    padding: 10px 20px;
+  }
+}
+.create-mode .assignment-card,
+.create-mode .notice {
   width: 100%;
-  max-width: 500px; /* Adjust as needed */
+  max-width: 500px;
   margin: 10px auto;
-  font-size: 14px; /* Adjust as needed */
+  font-size: 14px;
 }
 
-.create-mode .assignment-card img, .create-mode .noticeimage {
+.create-mode .assignment-card img,
+.create-mode .noticeimage {
   width: 60px;
   height: 60px;
 }

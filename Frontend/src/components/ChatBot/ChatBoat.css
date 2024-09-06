@@ -1,6 +1,6 @@
 .chatBot-icon {
   position: fixed;
-  bottom: 100px;
+  bottom: 60px;
   right: 30px;
   font-size: 40px;
   cursor: pointer;
@@ -13,7 +13,7 @@
 .chatBot-popup {
   position: fixed;
   bottom: 100px;
-  right: 30px; /* Adjusted for better alignment */
+  right: 30px; 
   background-color: #e8e8e8;
   padding: 15px;
   border-radius: 10px;
@@ -23,7 +23,7 @@
   flex-direction: column;
   height: 450px; 
   transition: opacity 0.3s, transform 0.3s; 
-  overflow: hidden; /* Hide overflow to use the scrollbar in the body */
+  overflow: hidden; 
 }
 
 .chatBot-popup-header {
@@ -60,7 +60,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between; 
-  overflow-y: auto; /* Enable scrolling */
+  overflow-y: auto; 
 }
 
 .messages-container {

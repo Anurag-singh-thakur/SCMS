@@ -3,66 +3,146 @@
   border-radius: 8px;
   border: 2px solid white;
   color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   padding: 20px;
-  width: 95%;
-  max-width: 500px;  
+  width: 100%;
+  max-width: 500px;
   margin: 0;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center horizontally and vertically */
+  z-index: 1000; /* Ensure it is above the blur overlay */
+  transition: transform 0.3s ease;
+}
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.close-button:hover {
+  color: #ff6f6f; /* Light red color for hover effect */
 }
 
+/* Styling for header inside the container */
 .create-container h2 {
   margin-bottom: 20px;
+  font-size: 24px;
+  color: #f8f9fa;
+  position: relative;
 }
 
+/* Styling for form group */
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
 }
-
 .form-group label {
-  display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-weight: bold;
-  width: 90%;
+  color: #f8f9fa;
 }
-
 .form-group textarea {
-  width: 80%; /* Adjust width to 80% */
-  padding: 8px;
-  border: 1px solid #ddd;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #444;
   border-radius: 4px;
   background-color: #333;
   color: white;
   resize: vertical;
+  font-size: 16px;
 }
 
+/* Styling for upload wrapper */
 .upload-wrapper {
-  position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align to the left */
-  width: 100%; /* Match the width with the textarea */
+  justify-content: space-evenly;
+  gap: 20px; 
+  width: 100%;
 }
-
 .upload-icon {
   cursor: pointer;
-  width: 150px; /* Increased width */
-  height: 150px; /* Increased height */
-  cursor: pointer;
+  width: 120px;
+  height: 120px;
   object-fit: contain;
-  margin-right: 20px; /* Add some space between the icon and the image */
+  border-radius: 8px;
+  border: 2px solid #444;
 }
 .preview-container {
   display: flex;
-  background-color: green;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
 }
+
 .file-preview {
-  margin: 5px;
-  max-width: 200px;
-  max-height: 200px;
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 8px;
+  border: 2px solid #444;
+  overflow: hidden;
 }
+#new {
+  width: 150px; /* Increased width */
+  height: 150px; /* Increased height */
+  display: block;
+  object-fit: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 4px;
+}
+
+/* Submit button styles */
+.submit-button {
+  background-color: #009000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.submit-button:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 8px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.radio-note {
+  font-size: 14px;
+  color: #ff6f6f; /* Light red color for warning */
+  margin-top: 8px;
+}
+
 #new {
   width: 150px; /* Increased width */
   height: 150px; /* Increased height */
