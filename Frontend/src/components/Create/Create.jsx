@@ -4,21 +4,22 @@ import usePreviewImg from '../../hooks/usePrevImg';
 import uploadIcon from '../../assets/upload_area.png'; 
 import { useRecoilState } from 'recoil';
 import noticeAtom from '../../atom/NoticeAtom';
+import assignmentAtom from '../../atom/AssignmentAtom';
+import { useParams } from 'react-router-dom';
 
-const Create = () => {
+const Create = ({subjectId,handleClose }) => {
   const [textContent, setTextContent] = useState('');
   const { handleImageChange, imgUrl } = usePreviewImg();
   const [notice, setNotice] = useRecoilState(noticeAtom);
-  const [selection, setSelection] = useState('notice'); // Default selection is 'notice'
+  const [assignment, setAssignment] = useRecoilState(assignmentAtom); 
+  const [selection, setSelection] = useState('notice');  
+  const [assignmentDate, setAssignmentDate] = useState('');
   const [isPopupVisible, setPopupVisible] = useState(true);
-
-  const handleClose = () => {
-    setPopupVisible(false);
-  }
-
+ 
   useEffect(() => {
     console.log('Notice updated:', notice);
-  }, [notice]);  // Log the notice state whenever it changes
+    console.log('Assignment updated:', assignment);
+  }, [notice, assignment]); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,12 +35,23 @@ const Create = () => {
     }
 
     try {
+      const requestBody = {
+        textContent,
+        imgUrl,
+        type: selection,
+      };
+
+      if (selection === 'assignment') {
+        requestBody.assignmentDate = assignmentDate;
+      }
+      console.log(requestBody);
+
       const response = await fetch(`/api/s/subject/${subjectId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ textContent, imgUrl, type: selection })
+        body: JSON.stringify(requestBody)
       });
 
       if (!response.ok) {
@@ -47,14 +59,18 @@ const Create = () => {
       }
       
       const data = await response.json();
-      setNotice((prevNotice) => [...prevNotice, data]);
-      console.log('Success:', data);
+
+      if (data.status === 'notice') {
+        setNotice((prevNotice) => [...prevNotice, data]);
+      } else if (data.status === 'assignment') {
+        setAssignment((prevAssignment) => [...prevAssignment, data]);
+      }
+      handleClose();
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
-  // Only render the popup if isPopupVisible is true
   if (!isPopupVisible) {
     return null;
   }
@@ -121,6 +137,20 @@ const Create = () => {
         </div>
         <p className="radio-note">Please select only one option.</p>
       </div>
+
+      {selection === 'assignment' && (
+        <div className="form-group">
+          <label htmlFor="assignment-date">Due Date:</label>
+          <input
+            type="date"
+            id="assignment-date"
+            value={assignmentDate}
+            onChange={(e) => setAssignmentDate(e.target.value)}
+            required
+          />
+        </div>
+      )}
+
       <button className="submit-button" onClick={handleSubmit}>
         Submit
       </button>

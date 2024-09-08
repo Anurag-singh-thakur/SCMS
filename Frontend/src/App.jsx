@@ -17,6 +17,9 @@ import Sidebar from './components/Sidebar/Sidebar';
 import Info from './components/Info/Info';
 import Chat from './components/Chat/Chat';
 import Navbar2 from './components/Navbar2/Navbar2';
+import Stream from './components/stream/Stream';
+import JoinMeeting from './components/stream/JoinMeeting';
+
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -36,10 +39,11 @@ const App = () => {
           <Route path="/subject/:id" element={<Class />} />
           <Route path="/ebook/:id" element={<Ebook />} />  
           <Route path="/join/:id" element={<JoinSubject />} /> 
-          {/* <Route path="sidebar" element={<Sidebar/>} />   */}
+          <Route path="/meeting/:callId" element={<JoinMeeting />} />
+          <Route path='/stream' element={<Stream />} />
           <Route path="navbar2" element={<Navbar2/>} />  
           <Route path="/info" element={<Info/>} />  
-          <Route path="/chat" element={<Chat/>} />  
+          <Route path="/chat/:subjectId" element={<Chat/>} />  
           
         </Routes>
         <Chatbot />
