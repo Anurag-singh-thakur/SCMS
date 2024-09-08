@@ -12,19 +12,19 @@ const Navbar2 = ({ onCreateClick, onShareClick }) => {
 
   return (
     <div id="navbar2">
-      <button id="chat-button" onClick={() => navigate('/chat')}>
+      <button className="navbar2-btn" onClick={() => navigate('/chat')}>
         <RiChatSmile3Line />
       </button>
-      <button id="share-button" onClick={onShareClick}>
+      <button className="navbar2-btn" onClick={onShareClick}>
         <FaShare />
       </button>
-      <button id="meet-button" onClick={() => alert('Video call functionality not implemented yet')}>
+      <button className="navbar2-btn" onClick={() => navigate('/stream')}>
         <SiGooglemeet />
       </button>
-      <button id="create-button" onClick={onCreateClick}>
+      <button className="navbar2-btn" onClick={onCreateClick}>
         <IoIosAddCircleOutline />
       </button>
-      <button id="info-button" onClick={() => navigate('/info')}>
+      <button className="navbar2-btn" onClick={() => navigate('/info')}>
         <RiInformation2Line />
       </button>
     </div>

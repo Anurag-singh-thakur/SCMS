@@ -9,6 +9,7 @@ import userAtom from '../../atom/UserAtom.js';
 import subjectAtom from '../../atom/SubjectAtom.js';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import upload_area from '../../assets/upload_area.png';
+import Loader from '../Loader/Loader.jsx';
 
 const Class = ({ onNextClassTime }) => {
     const [expanded, setExpanded] = useState({});
@@ -20,7 +21,7 @@ const Class = ({ onNextClassTime }) => {
     const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
     const user = useRecoilValue(userAtom);
     const [subject, setSubject] = useRecoilState(subjectAtom);
-
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         const getSubjects = async () => {
             if (!user) return;
@@ -34,6 +35,8 @@ const Class = ({ onNextClassTime }) => {
                 setSubject(data);
             } catch (error) {
                 console.error(error);
+            } finally{
+                setLoading(false);
             }
         };
 
@@ -143,11 +146,11 @@ const Class = ({ onNextClassTime }) => {
         } catch (error) {
             console.log(error);
         }
-        // setSubject(subject.filter((classItem) => classItem._id !== id));
     };
 
     return (
         <div className="class-container1">
+            {loading && <Loader/>}
             <div className="class-cards">
                 {subject && subject.length > 0 && subject.map((classItem) => {
                     const isExpanded = expanded[classItem._id];

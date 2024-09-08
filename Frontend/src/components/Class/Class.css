@@ -73,7 +73,7 @@
 
 .class-container {
   display: flex;
-  height: 100vh;
+  height: 90vh;
 
   background-color: #212121;
   color: white;
@@ -147,6 +147,7 @@
 }
 
 .content {
+  height: 90vh;
   flex: 2;
   display: flex;
   width: 80%;
@@ -187,6 +188,7 @@
 }
 
 .notices-section {
+  height: 90vh;
   border-right: 2px solid white;
   padding-right: 20px;
   flex: 2;
@@ -375,8 +377,7 @@
 
 .modal-content img {
   display: inline;
-  width: 200px;
-  height: 200px;
+  width: 99%;
   object-fit: contain;
   max-height: 100%;
   margin: 0 auto;
