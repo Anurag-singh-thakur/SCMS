@@ -1,7 +1,6 @@
 #navbar2 {
   position: absolute;
-  top: 0;
-  left: 0;
+ 
   width: 100%;
   background: rgba(0, 0, 0, 0.7);
   padding: 10px;
@@ -9,7 +8,7 @@
   justify-content: space-around;
   align-items: center;
   border-bottom: 2px solid #444;
-  z-index: 500;
+
   box-sizing: border-box;
 }
 
