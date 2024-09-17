@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
 const assignmentAtom = atom({
-    key: 'notice',
+    key: 'assignmentAtom',
     default: [] 
 });
 export default assignmentAtom;

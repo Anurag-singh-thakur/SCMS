@@ -7,8 +7,9 @@ import SubjectRoute from './Routes/SubjectRoute.js';
 import { v2 as cloudinary } from "cloudinary";
 import path from "path";
 import helpRoute from './Routes/HelpRoute.js';
+import ChatRoute from './Routes/ChatRoute.js';
+import {app,server } from "./socket/socket.js"
 
-const app = express();
 
 dotenv.config();
 cloudinary.config({
@@ -30,8 +31,9 @@ app.use(cookieParser());
 app.use('/api/user',UserRoute)
 app.use('/api/s',SubjectRoute)
 app.use('/api/generate',helpRoute);
+app.use('/api/c',ChatRoute)
+
 
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`http://localhost:${port}`));
-
+server.listen(port, () => console.log(`http://localhost:${port}`));

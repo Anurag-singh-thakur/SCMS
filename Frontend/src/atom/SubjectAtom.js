@@ -1,7 +1,7 @@
 import {atom } from 'recoil';
 
 const subjectAtom = atom({
-    key: 'subject',
+    key: 'subjectAtom',
     default: [] 
 });
 

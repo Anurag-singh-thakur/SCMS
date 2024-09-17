@@ -17,6 +17,17 @@ const SubjectSchema = new mongoose.Schema({
             type: String, 
         }
     }],
+    assignment: [{
+        AssignmentText: {
+            type: String,
+        },
+        img: {
+            type: String, 
+        },
+        dueDate: {
+            type: Date
+        }
+    }],
     coverImg: {
         type: String,
         default: null
@@ -30,7 +41,11 @@ const SubjectSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             default: null
         }
-    }]
+    }],
+    groupChat: [{  
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Chat",   
+    }],
 }, { timestamps: true });
 
 export default mongoose.model('Subject', SubjectSchema);
