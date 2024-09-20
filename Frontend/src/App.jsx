@@ -42,7 +42,7 @@ const App = () => {
           <Route path="/meeting/:callId" element={<JoinMeeting />} />
           <Route path='/stream' element={<Stream />} />
           <Route path="navbar2" element={<Navbar2/>} />  
-          <Route path="/info" element={<Info/>} />  
+          <Route path="/info/:id" element={<Info/>} />  
           <Route path="/chat/:subjectId" element={<Chat/>} />  
           
         </Routes>

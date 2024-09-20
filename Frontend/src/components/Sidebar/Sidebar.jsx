@@ -18,6 +18,7 @@ const Sidebar = () => {
       try {
         const response = await fetch(`/api/s/${user._id}`);
         const data = await response.json();
+        console.log(data,"sidebar")
         setSubjects(data);
       } catch (error) {
         console.error(error);

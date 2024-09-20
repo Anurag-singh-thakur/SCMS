@@ -47,6 +47,7 @@
 }
 
 .card {
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -189,7 +190,8 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
-  color: #333;
+  color: #000000;
+  background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: border-color 0.3s ease;
 }

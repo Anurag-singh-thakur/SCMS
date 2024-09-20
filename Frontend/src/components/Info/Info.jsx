@@ -1,28 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../Sidebar/Sidebar';
 import { FaEdit, FaTrashAlt, FaTimes } from 'react-icons/fa';
-import "./Info.css";
-import { RiChatSmile3Line } from "react-icons/ri";
-import { SiGooglemeet } from "react-icons/si";
-import { IoIosAddCircleOutline } from "react-icons/io";
-import { RiInformation2Line } from "react-icons/ri";
-import info_profile_image from '../../assets/profile_icon.png';
+import './Info.css';
+import { useRecoilValue } from 'recoil';
+import subjectAtom from '../../atom/SubjectAtom';
+import Navbar2 from '../Navbar2/Navbar2.jsx';
+import { useParams } from 'react-router-dom';
+import usePreviewImg from '../../hooks/usePrevImg.jsx'; // Import the custom hook
 
 const Info = () => {
-  const [userDetails, setUserDetails] = useState({
-    name: 'User Name',
-    position: 'Developer',
-    profileImage: info_profile_image
-  });
-
+  const subject = useRecoilValue(subjectAtom);
+  const [subjectstudent, setSubjectStudent] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [newDetails, setNewDetails] = useState({
-    name: userDetails.name,
-    position: userDetails.position,
-    profileImage: userDetails.profileImage
+    stuId: '',
+    name: '',
+    profileImage: '',
   });
 
-  const handleEditClick = () => {
+  const { id: subjectId } = useParams();
+  const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg(newDetails.profileImage);
+
+  // Update form when editing student details
+  const handleEditClick = (stu) => {
+    setNewDetails({
+      stuId: stu._id,
+      name: stu.username,
+      profileImage: stu.profileImage || '',
+    });
+    setImgUrl(stu.profileImage || ''); // Set the image in the preview hook
     setIsPopupVisible(true);
   };
 
@@ -31,19 +37,63 @@ const Info = () => {
     setNewDetails({ ...newDetails, [name]: value });
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const imageUrl = URL.createObjectURL(file);
-    setNewDetails({ ...newDetails, profileImage: imageUrl });
+  const handleSave = async () => {
+    // Attach the base64 image from imgUrl to newDetails
+    setNewDetails((prevDetails) => ({
+      ...prevDetails,
+      profileImage: imgUrl,
+    }));
+
+    try {
+      const res = await fetch(`/api/s/updateUserDetails/${newDetails.stuId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ ...newDetails, profileImage: imgUrl }),
+      });
+      
+      const data = await res.json();
+      console.log('Response:', data);
+      setIsPopupVisible(false);
+    } catch (error) {
+      console.error('Error updating details:', error);
+    }
   };
 
-  const handleSave = () => {
-    setUserDetails(newDetails);
-    setIsPopupVisible(false);
-  };
+  useEffect(() => {
+    const getSubjectStudent = async () => {
+      try {
+        const res = await fetch(`/api/s/getpartsubject/${subjectId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+        const data = await res.json();
+        setSubjectStudent(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getSubjectStudent();
+  }, [subjectId]);
 
   const handleDelete = () => {
-    setUserDetails(null);
+    // Delete user logic here
+  };
+
+  const handleCreateClick = () => {
+    console.log('Create button clicked');
+  };
+
+  const handleShareClick = () => {
+    const shareableLink = `${window.location.origin}/join/${subject?._id}`;
+    navigator.clipboard.writeText(shareableLink).then(() => {
+      alert('Link copied to clipboard!');
+    });
   };
 
   return (
@@ -51,34 +101,31 @@ const Info = () => {
       <div className="info-container">
         <Sidebar id="sidebar" />
         <div className="secondary-navbar-container">
-          <div className="secondary-navbar">
-            <button className=" btn-chat"> <RiChatSmile3Line /></button>
-            <button className=" btn-meet"><SiGooglemeet /></button>
-            <button className=" btn-add"><IoIosAddCircleOutline /></button>
-            <button className=" btn-info"><RiInformation2Line /></button>
-          </div>
-          {userDetails ? (
-            <div className="card-container">
-              <div className="card">
-                <div className="info-wrapper">
-                  <div className="info-card-image">
-                    <img src={userDetails.profileImage} alt="profile" />
+          <Navbar2 onCreateClick={handleCreateClick} onShareClick={handleShareClick} subjectId={subject?._id} />
+
+          {subjectstudent && subjectstudent.length > 0 ? (
+            subjectstudent.map((stu) => (
+              <div className="card-container" key={stu._id}>
+                <div className="card">
+                  <div className="info-wrapper">
+                    <div className="info-card-image">
+                      <img className="info-card-image" src={stu.image || 'https://via.placeholder.com/150'} alt="profile" />
+                    </div>
+                    <div className="info-card-title">
+                      <h3 style={{ color: 'black' }}>{stu.username}</h3>
+                    </div>
                   </div>
-                  <div className="info-card-title">
-                    <h2>{userDetails.name}</h2>
-                    <p>Position: {userDetails.position}</p>
+                  <div className="infoitems">
+                    <button className="infobtn-edit" onClick={() => handleEditClick(stu)}>
+                      <FaEdit />
+                    </button>
+                    <button className="infobtn-delete" onClick={handleDelete}>
+                      <FaTrashAlt />
+                    </button>
                   </div>
-                </div>
-                <div className="infoitems">
-                  <button className="infobtn-edit" onClick={handleEditClick}>
-                    <FaEdit />
-                  </button>
-                  <button className="infobtn-delete" onClick={handleDelete}>
-                    <FaTrashAlt />
-                  </button>
                 </div>
               </div>
-            </div>
+            ))
           ) : (
             <p>No profile found. User deleted.</p>
           )}
@@ -91,12 +138,8 @@ const Info = () => {
             <FaTimes className="popup-close" onClick={() => setIsPopupVisible(false)} />
             <div className="image-section">
               <input type="file" accept="image/*" onChange={handleImageChange} />
-              {newDetails.profileImage && (
-                <img
-                  src={newDetails.profileImage}
-                  alt="preview"
-                  className="image-preview"
-                />
+              {imgUrl && (
+                <img src={imgUrl} alt="preview" className="image-preview" />
               )}
             </div>
             <div className="form-section">
@@ -109,18 +152,9 @@ const Info = () => {
                   onChange={handleInputChange}
                 />
               </label>
-              <label>
-                Position:
-                <input
-                  type="text"
-                  name="position"
-                  value={newDetails.position}
-                  onChange={handleInputChange}
-                />
-              </label>
               <div className="popup-buttons">
-                <button onClick={handleSave}>Save</button>
-                <button onClick={() => setIsPopupVisible(false)}>Cancel</button>
+                <button onClick={handleSave} style={{ backgroundColor: '#4CAF50', color: 'white' }}>Save</button>
+                <button onClick={() => setIsPopupVisible(false)} style={{ backgroundColor: '#f44336', color: 'white' }}>Cancel</button>
               </div>
             </div>
           </div>

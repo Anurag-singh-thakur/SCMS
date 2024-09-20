@@ -7,12 +7,12 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import { RiInformation2Line } from "react-icons/ri";
 import './Navbar2.css'; 
 
-const Navbar2 = ({ onCreateClick, onShareClick }) => {
+const Navbar2 = ({ onCreateClick, onShareClick,subjectId }) => {
   const navigate = useNavigate();
 
   return (
     <div id="navbar2">
-      <button className="navbar2-btn" onClick={() => navigate('/chat')}>
+      <button className="navbar2-btn" onClick={() => navigate(`/chat/${subjectId}`)}>
         <RiChatSmile3Line />
       </button>
       <button className="navbar2-btn" onClick={onShareClick}>
@@ -24,7 +24,7 @@ const Navbar2 = ({ onCreateClick, onShareClick }) => {
       <button className="navbar2-btn" onClick={onCreateClick}>
         <IoIosAddCircleOutline />
       </button>
-      <button className="navbar2-btn" onClick={() => navigate('/info')}>
+      <button className="navbar2-btn" onClick={() => navigate(`/info/${subjectId}`)}>
         <RiInformation2Line />
       </button>
     </div>

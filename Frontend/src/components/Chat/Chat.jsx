@@ -47,7 +47,6 @@ const Chat = () => {
         if (!response.ok) {
           throw new Error('Failed to fetch messages');
         }
-
         const data = await response.json();
         console.log(data);
         setMessages(data.messages || []);
@@ -68,7 +67,6 @@ const Chat = () => {
       setNewMessage('');  
     }
   };
-
   const handleCreateClick = () => {
     console.log("Create button clicked");
   };

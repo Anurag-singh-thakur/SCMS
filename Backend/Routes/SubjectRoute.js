@@ -1,6 +1,6 @@
 import express from "express";
 import { protectRoute } from "../Middleware/protectRoute.js";
-import { Addsubject,GetSubject,AddNoticeOrAssignment,GetNotice,deleteAssignment,deleteNotice,deleteSubject,addstudent,GetAssignment } from "../Controllers/SubjectController.js";
+import { Addsubject,GetSubject,updateUserDetails,getAllstu,AddNoticeOrAssignment,GetNotice,deleteAssignment,deleteNotice,deleteSubject,addstudent,GetAssignment } from "../Controllers/SubjectController.js";
 
 const router = express.Router();
 
@@ -13,5 +13,7 @@ router.delete('/assignment/:subjectId/:assignmentId',protectRoute,deleteAssignme
 router.delete('/notice/:subjectId/:noticeId',protectRoute,deleteNotice)
 router.delete('/:subjectId',protectRoute,deleteSubject)
 router.post('/join/:subjectId',protectRoute,addstudent);
+router.get('/getpartsubject/:subId',protectRoute,getAllstu);
+router.put('/updateUserDetails/:stuId', updateUserDetails);  
 
 export default router;

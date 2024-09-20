@@ -177,7 +177,7 @@ const Class = () => {
           <button className="share-button" onClick={handleShareButtonClick}><FaShare /></button>
           <button className="chat-button" onClick={() => navigate('/stream')}><SiGooglemeet /></button>
           <button className="create-button" onClick={handleCreateButtonClick}><IoIosAddCircleOutline /></button>
-          <button className="info-button" onClick={() => navigate('/info')}><RiInformation2Line /></button>
+          <button className="info-button" onClick={() => navigate(`/info/${subjectId}`)}><RiInformation2Line /></button>
         </div>
 
         <section className="notices-section">

@@ -119,7 +119,7 @@ const AddNoticeOrAssignment = async (req, res) => {
                 _id: newNotice._id,
                 NoticeText: newNotice.NoticeText,
                 img: newNotice.img,
-                teacher: subject.teacher
+                teacher: subject.teacher,
             });
 
         } else if (type === 'assignment') {
@@ -267,27 +267,88 @@ const deleteSubject = async(req,res) => {
 
 const addstudent = async (req, res) => {
     try {
-        const userId = req.user._id;  
-        const { subjectId } = req.params;
-
-        const subject = await Subject.findById(subjectId);
-        if (!subject) {
-            return res.status(404).json({ error: 'Subject not found' });
-        }
-
-        const userExists = subject.students.some(student => student.stuId.toString() === userId.toString());
-        if (userExists) {
-            return res.status(400).json({ error: 'User already joined this subject' });
-        }
-
-        subject.students.push({ stuId: userId });
-        await subject.save();
-
-        return res.status(200).json({ message: 'User joined the subject successfully' });
+      const userId = req.user._id;  
+      const { subjectId } = req.params;
+  
+      const subject = await Subject.findById(subjectId);
+      if (!subject) {
+        return res.status(404).json({ error: 'Subject not found' });
+      }
+  
+      const userExists = subject.students.some(student => student.stuId.toString() === userId.toString());
+      if (userExists) {
+        return res.status(400).json({ error: 'User already joined this subject' });
+      }
+      subject.students.push({ stuId: userId });
+      await subject.save();
+  
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      const classExists = user.class.some(c => c.subject.toString() === subjectId.toString());
+      if (classExists) {
+        return res.status(400).json({ error: 'Subject already added to user classes' });
+      }
+  
+      user.class.push({ subject: subjectId });
+      await user.save();
+  
+      return res.status(200).json({ message: 'User joined the subject and class successfully' });
     } catch (error) {
-        console.error('Error joining subject:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+      console.error('Error joining subject:', error);
+      return res.status(500).json({ error: 'Internal server error' });
     }
-};
+  };
+  
 
-export {Addsubject,GetSubject,AddNoticeOrAssignment,deleteAssignment,GetNotice,deleteSubject,GetAssignment,deleteNotice,addstudent};
+const getAllstu = async(req,res)=>{
+    try {
+        const subId = req.params.subId;
+        const getsub = await Subject.findById(subId);
+        console.log(getsub)
+        const {students} = getsub;
+            const getdetails = await User.find({ _id: { $in: students.map(student => student.stuId) } });
+        return res.status(200).json(getdetails);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error:"error"})
+    }
+}
+
+const updateUserDetails = async (req, res) => {
+    const { stuId } = req.params;
+    let { name, profileImage } = req.body;
+  
+    try {
+        console.log(req.body)
+      if (!name || !profileImage) {
+        return res.status(400).json({ message: 'Name and profile image are required' });
+      }
+      if(profileImage){
+        const uploadResponse = await cloudinary.uploader.upload(profileImage);
+         
+        profileImage = uploadResponse.secure_url;
+      }
+      const updatedUser = await User.findByIdAndUpdate(
+        stuId,
+        {
+          username: name,
+          image: profileImage,
+        },
+        { new: true }  
+      );
+  
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+ 
+      res.status(200).json({ message: 'User updated successfully', updatedUser });
+    } catch (error) {
+      console.error('Error updating user:', error);
+      res.status(500).json({ message: 'Error updating user' });
+    }
+  };
+
+export {Addsubject,getAllstu,GetSubject,updateUserDetails,AddNoticeOrAssignment,deleteAssignment,GetNotice,deleteSubject,GetAssignment,deleteNotice,addstudent};
