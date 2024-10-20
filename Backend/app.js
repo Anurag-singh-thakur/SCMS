@@ -8,6 +8,7 @@ import { v2 as cloudinary } from "cloudinary";
 import path from "path";
 import helpRoute from './Routes/HelpRoute.js';
 import ChatRoute from './Routes/ChatRoute.js';
+import QuizRoute from './Routes/QuizRouter.js';
 import {app,server } from "./socket/socket.js"
 
 
@@ -32,7 +33,7 @@ app.use('/api/user',UserRoute)
 app.use('/api/s',SubjectRoute)
 app.use('/api/generate',helpRoute);
 app.use('/api/c',ChatRoute)
-
+app.use('/api/q',QuizRoute)
 
 
 const port = process.env.PORT || 5000;
