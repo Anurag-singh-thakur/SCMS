@@ -17,7 +17,6 @@ import Sidebar from './components/Sidebar/Sidebar';
 import Info from './components/Info/Info';
 import Chat from './components/Chat/Chat';
 import Stream from './components/stream/Stream';
-import JoinMeeting from './components/stream/JoinMeeting';
 
 
 const App = () => {
@@ -38,7 +37,6 @@ const App = () => {
           <Route path="/subject/:id" element={<Class />} />
           <Route path="/ebook/:id" element={<Ebook />} />  
           <Route path="/join/:id" element={<JoinSubject />} /> 
-          <Route path="/meeting/:callId" element={<JoinMeeting />} />
           <Route path='/stream/:callId' element={<Stream />} />
           <Route path="/info/:id" element={<Info/>} />  
           <Route path="/chat/:subjectId" element={<Chat/>} />  

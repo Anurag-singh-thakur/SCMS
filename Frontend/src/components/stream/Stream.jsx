@@ -166,7 +166,7 @@ export const MyFloatingLocalParticipant = ({ participant }) => {
 
 // Generate a shareable link for the call
 export const ShareLink = ({ callId }) => {
-  const shareLink = `${window.location.origin}/meeting/${callId}`;
+  const shareLink = `${window.location.origin}/stream/${callId}`;
 
   const copyLink = () => {
     navigator.clipboard.writeText(shareLink).then(() => {
