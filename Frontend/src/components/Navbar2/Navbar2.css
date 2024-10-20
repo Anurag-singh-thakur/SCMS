@@ -1,28 +1,22 @@
 #navbar2 {
-<<<<<<< HEAD
+
   position: absolute;
- 
-  width: 100%;
-=======
-  left: 19.7%;
-  width: 1220px;
->>>>>>> origin/main
   background: rgba(0, 0, 0, 0.7);
   padding: 10px;
   display: flex;
   justify-content: space-around;
   align-items: center;
   border-bottom: 2px solid #444;
-
+  z-index: 1000;
   box-sizing: border-box;
 }
 
-#navbar2-btn {
+.navbar2-btn{
   background: transparent;
   color: white;
   border: none;
   cursor: pointer;
-  font-size: 25px;
+  font-size: 20px;
   transition: 0.3s ease-in-out;
 }
 

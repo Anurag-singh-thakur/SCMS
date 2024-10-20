@@ -1,25 +1,26 @@
 .info-container {
   display: flex;
-  flex-direction: row;
+  height: 90vh;
+  background-color: #212121;
+  color: white;
+  overflow: hidden;
+}
+.label-info{
+  margin-top: 20px;
 }
 #sidebar {
   border-right: 2px solid #771313;
 }
 
 .secondary-navbar-container {
+  height: 90vh;
   display: flex;
-  flex-direction: column;
-}
-.secondary-navbar {
-  position: relative !important;
-  width: calc(100vw - 200px);
-  padding: 10px;
-  display: flex;
-  justify-content: space-around;
-  background-color: rgba(0, 0, 0, 0.9);
-  z-index: 500;
-  border-bottom: 2px solid #444;
-  box-sizing: border-box;
+  width: 80%;
+  border-left: 2px solid white;
+  padding: 20px;
+  background-color: #212121;
+  /* gap: 20px; */
+  position: relative;
 }
 
 .btn-chat,
@@ -41,12 +42,16 @@
   overflow: hidden;
 }
 .card-container {
+  position: relative;
+  width: 100%;
   padding: 10px;
   margin: 10px;
   box-sizing: border-box;
 }
 
 .card {
+  height: 100px;
+  margin-top: 65px;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -54,7 +59,6 @@
   width: 100%;
   background-color: #fff;
   padding: 10px;
-  margin: 10px;
   border: 1px solid #ddd;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -79,7 +83,7 @@
 }
 .infoitems {
   display: flex;
-  gap: 10px;
+  gap: 1px;
   align-items: center;
   flex-direction: column;
 }
@@ -126,8 +130,9 @@
 
 .popup-content {
   background: #ffffff;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
+  height: 200px;
   width: 500px;
   max-width: 90%;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
@@ -159,8 +164,8 @@
 }
 
 .image-preview {
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: 50%;
   border: 2px solid #007bff;
@@ -171,10 +176,9 @@
 }
 
 .form-section {
-  flex: 1;
+  flex: 1;  
   display: flex;
   flex-direction: column;
-  gap: 15px;
 }
 
 .form-section label {
@@ -260,4 +264,10 @@
   .secondary-navbar {
     padding: 10px;
   }
+}
+
+#navbar2 {
+  position: absolute;
+  width: 100%;
+  left: 0!important;
 }

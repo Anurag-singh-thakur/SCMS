@@ -8,7 +8,7 @@ const Home = () => {
     const handleNextClassTime = (time) => {
         setNextClassTime(time);
     };
-
+    
     return (
         <div className='home'>
             <div className="flashmessage">
