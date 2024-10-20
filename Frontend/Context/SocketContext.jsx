@@ -16,7 +16,7 @@ export const SocketContextProvider =({children})=>{
     const user = useRecoilValue(userAtom);
     const [onlineUser,setOnlineUser] = useState([])
     useEffect(()=>{
-       const socket = io("http://localhost:5000",{
+       const socket = io("https://scms-backend-hfhj.onrender.com",{
            query:{
             userId: user?._id,
            }
