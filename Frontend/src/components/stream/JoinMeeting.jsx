@@ -1,127 +1,201 @@
+import {
+  CallingState,
+  StreamCall,
+  StreamVideo,
+  StreamVideoClient,
+  useCallStateHooks,
+  ParticipantView,
+  CallControls,
+  StreamTheme,
+  SpeakerLayout,
+} from '@stream-io/video-react-sdk';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { StreamVideoClient, StreamCall, StreamTheme, SpeakerLayout, useCallStateHooks, CallControls } from '@stream-io/video-react-sdk';
-import Loader from '../Loader/Loader';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../../atom/UserAtom';
-import { MyFloatingLocalParticipant, ShareLink } from './Stream';
+import Loader from '../Loader/Loader';
+import { useNavigate, useParams } from 'react-router-dom';
 import './stram.css';
 import '@stream-io/video-react-sdk/dist/css/styles.css';
 
 const apiKey = 'j7gdbzr5dj23';
 
-const JoinMeeting = () => {
-  const { callId } = useParams();  
-  const navigate = useNavigate(); // Hook to programmatically navigate
-  const [call, setCall] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [token, setToken] = useState('');
-  const [videoClient, setVideoClient] = useState(null);
+function Stream() {
+  const { callId } = useParams(); // Get callId from the URL parameters
   const user = useRecoilValue(userAtom);
+  const [videoClient, setVideoClient] = useState(null);
+  const [token, setToken] = useState('');
+  const [call, setCall] = useState(null);
+  const navigate = useNavigate();
 
-  // Fetch the token when the component mounts
+  // Fetch the token when the user is available
   useEffect(() => {
     const getToken = async () => {
-      try {
-        const res = await fetch('/api/c/stream/token', { credentials: 'include' });
-        const data = await res.json();
-        setToken(data.token);  // Ensure token is set once it's fetched
-      } catch (error) {
-        console.error('Error fetching token:', error);
-        setError('Error fetching token');
+      if (user) {
+        try {
+          const res = await fetch('/api/c/stream/token', {
+            credentials: 'include',
+          });
+          const data = await res.json();
+          setToken(data.token);
+        } catch (error) {
+          console.error('Error fetching token:', error);
+        }
       }
     };
     getToken();
   }, [user]);
 
-  // Initialize StreamVideoClient once the token is available
+  // Initialize video client after token is received
   useEffect(() => {
-    if (token && user) {
+    if (token) {
       const client = new StreamVideoClient({
         apiKey,
-        tokenProvider: () => token,
+        user: {
+          id: user?._id,
+          name: user?.username,
+          image: user?.image,
+        },
+        tokenProvider: () => Promise.resolve(token),
       });
       setVideoClient(client);
+
+      // Cleanup: disconnect the video client on component unmount
+      return () => {
+        if (client) {
+          client.disconnectUser();
+        }
+      };
     }
   }, [token, user]);
 
-  // Use hooks from Stream SDK
-  const { useLocalParticipant, useRemoteParticipants } = useCallStateHooks();
-  const localParticipant = useLocalParticipant();
-  const remoteParticipants = useRemoteParticipants();
-
-  // Initialize the call once videoClient and token are available
+  // Setup the call once the video client and token are ready
   useEffect(() => {
-    const initializeCall = async () => {
-      if (!videoClient || !user || !token) throw new Error('Missing videoClient, user, or token');
-      try {
-        // Connect the user to the client
-        await videoClient.connectUser({
-          id: user._id,
-          name: user.username,
-          image: 'http://res.cloudinary.com/dybgs03yy/image/upload/v1725439344/scagutwwdrziyy7c2isd.png',
-        }, token);
-
-        // Create and join the call with options for audio and video
-        const callInstance = videoClient.call('default', callId);
-        await callInstance.join({
-          create: true,
-          audio: true, // Ensure audio is turned on
-          video: true, // Ensure video is turned on
+    if (videoClient && !call) {
+      const callInstance = videoClient.call('default', callId); // Use callId from params
+      callInstance
+        .join({ create: true })
+        .then(() => setCall(callInstance))
+        .catch((error) => {
+          console.error('Error joining call:', error);
         });
-        
-        // Enable camera and microphone after joining
-        await callInstance.camera.enable();
-        await callInstance.microphone.enable();
 
-        setCall(callInstance);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error joining call:', err);
-        setError('Failed to join the call.');
-        setLoading(false); // Stop loading on error
-        navigate('/'); // Optionally redirect to home on error
-      }
-    };
-
-    if (videoClient && token) {
-      initializeCall();
+      // Cleanup: leave the call when component unmounts
+      return () => {
+        if (callInstance) {
+          callInstance.leave();
+        }
+      };
     }
+  }, [videoClient, callId, call]);
 
-    return () => {
-      if (call) call.leave();
-      if (videoClient) videoClient.disconnectUser();
-    };
-  }, [videoClient, callId, user, token, navigate, call]);
-
-  // Monitor the call state and navigate when the call ends
+  // Navigate home when the call ends
   useEffect(() => {
     if (call && call.state === 'ended') {
-      navigate('/'); // Navigate to home when the call ends
+      navigate('/'); // Navigate to home when call ends
     }
   }, [call, navigate]);
 
-  // Show loader until call is ready or an error occurs
-  if (loading) return <Loader />;
-  if (error) return <div>{error}</div>;
-  if (!call) return <div>Error initializing call...</div>;
+  // Display Loader while video client or call is being initialized
+  if (!videoClient || !call) return <Loader />;
 
-  console.log('Call state:', call.state);
-  if (!call.state) {
+  return (
+    <StreamVideo client={videoClient}>
+      <StreamCall className="str-video" call={call}>
+        <MyUILayout call={call} />
+      </StreamCall>
+    </StreamVideo>
+  );
+}
+
+export const MyUILayout = ({ call }) => {
+  const { useCallCallingState, useLocalParticipant, useRemoteParticipants } = useCallStateHooks();
+
+  const callingState = useCallCallingState();
+  const localParticipant = useLocalParticipant();
+  const remoteParticipants = useRemoteParticipants();
+
+  if (callingState !== CallingState.JOINED) {
     return <Loader />;
   }
 
   return (
-    <StreamCall call={call}>
-      <StreamTheme style={{ position: 'relative' }}>
-        <SpeakerLayout participantsBarPosition="bottom" />
-        <CallControls />
-        <MyFloatingLocalParticipant participant={localParticipant} />
-        <ShareLink callId={call.cid.split(':')[1]} />
-      </StreamTheme>
-    </StreamCall>
+    <StreamTheme style={{ position: 'relative' }}>
+      <SpeakerLayout participantsBarPosition="bottom" />
+      <CallControls />
+      <MyFloatingLocalParticipant participant={localParticipant} />
+      {console.log(call, 'remoteParticipants')}
+      <ShareLink callId={call.cid.split(':')[1]} />
+    </StreamTheme>
   );
 };
 
-export default JoinMeeting;
+export const MyFloatingLocalParticipant = ({ participant }) => {
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        bottom: '15px',
+        left: '15px',
+        width: '240px',
+        height: '135px',
+        boxShadow: 'rgba(0, 0, 0, 0.1) 0px 0px 10px 3px',
+        borderRadius: '12px',
+        zIndex: 1000,
+      }}
+    >
+      {participant ? <ParticipantView muteAudio participant={participant} /> : null}
+    </div>
+  );
+};
+
+export const ShareLink = ({ callId }) => {
+  const shareLink = `${window.location.origin}/meeting/${callId}`;
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(shareLink).then(() => {
+      alert('Link copied to clipboard!');
+    });
+  };
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        right: '20px',
+        bottom: '20px',
+        zIndex: 1000,
+        backgroundColor: '#fff',
+        padding: '10px',
+        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+        borderRadius: '8px',
+      }}
+    >
+      <button
+        onClick={copyLink}
+        style={{
+          backgroundColor: '#4CAF50',
+          color: 'white',
+          padding: '10px 20px',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        }}
+      >
+        Copy Join Link
+      </button>
+      <input
+        type="text"
+        readOnly
+        value={shareLink}
+        style={{
+          marginLeft: '10px',
+          border: '1px solid #ddd',
+          padding: '5px',
+          borderRadius: '4px',
+        }}
+      />
+    </div>
+  );
+};
+
+export default Stream;

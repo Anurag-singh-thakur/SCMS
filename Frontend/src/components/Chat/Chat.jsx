@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Chat.css';
 import { io } from "socket.io-client";
 import Sidebar from '../Sidebar/Sidebar';
@@ -6,7 +6,6 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { chatMessagesState } from '../../atom/chatAtom.js';  
 import { useParams } from 'react-router-dom';
 import userAtom from '../../atom/UserAtom.js';
-import Navbar2 from '../Navbar2/Navbar2.jsx';
 
 const Chat = () => {
   const [messages, setMessages] = useRecoilState(chatMessagesState);
@@ -17,6 +16,7 @@ const Chat = () => {
   const { subjectId } = useParams();
   const user = useRecoilValue(userAtom);
   const userId = user?._id;
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const socketInstance = io("http://localhost:5000", {
@@ -60,7 +60,11 @@ const Chat = () => {
 
     fetchMessages();
   }, [subjectId]);
-
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
   const handleSendMessage = () => {
     if (newMessage.trim() && socket) {
       socket.emit("newMessage", { subjectId, message: newMessage, sender: userId });
@@ -84,45 +88,46 @@ const Chat = () => {
       <div className="app-container">
         <Sidebar className="sidebar-chat" />
         <div className="chat-container">
-      <Navbar2 onCreateClick={handleCreateClick} onShareClick={handleShareClick} />
+          <div className="main-chat-container">
+            <div className="chat-header">
+              Chat with Group - {subjectName} 
+            </div>
 
-          <div className="chat-header">
-            Chat with Group - {subjectName} 
-          </div>
-
-          <div className="chat-messages">
-            {loading ? (
-              <div>Loading messages...</div>
-            ) : (
-              messages.map((msg) => (
-                <div
-                  key={msg._id}
-                  className={`message ${msg.sender._id === userId ? 'message-self' : 'message-other'}`}
-                >
-                  <div className="message-content">
-                    <img
-                      src={msg.sender.imageUrl || '/path/to/default-avatar.jpg'}
-                      alt="User"
-                      className="message-icon"
-                    />
-                    <div className="message-info">
-                      <span className="message-username">{msg.sender.username}</span>
-                      <p className="message-text">{msg.message}</p>
+            <div className="chat-messages">
+              {loading ? (
+                <div>Loading messages...</div>
+              ) : (
+                messages.map((msg) => (
+                  <div
+                    key={msg._id}
+                    className={`message ${msg.sender._id === userId ? 'message-self' : 'message-other'}`}
+                  >
+                    <div className="message-content">
+                      <img
+                        src={msg.sender.imageUrl || '/path/to/default-avatar.jpg'}
+                        alt="User"
+                        className="message-icon"
+                      />
+                      <div className="message-info">
+                        <span className="message-username">{msg.sender.username}</span>
+                        <p className="message-text">{msg.message}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
-            )}
-          </div>
+                ))
+              )}
+              <div ref={messagesEndRef} /> 
+            </div>
 
-          <div className="chat-input">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type a message..."
-            />
-            <button onClick={handleSendMessage}>Send</button>
+            <div className="chat-input">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                placeholder="Type a message..."
+              />
+              <button onClick={handleSendMessage}>Send</button>
+            </div>
           </div>
         </div>
       </div>

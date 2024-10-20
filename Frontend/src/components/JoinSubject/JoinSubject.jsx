@@ -7,7 +7,6 @@ const JoinSubject = () => {
     useEffect(() => {
       const joinSubject = async () => {
         try {
-          console.log(subjectId);
   
           const response = await fetch(`/api/s/join/${subjectId}`, {
             method: 'POST',

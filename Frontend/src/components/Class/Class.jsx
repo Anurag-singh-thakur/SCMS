@@ -8,13 +8,9 @@ import userAtom from '../../atom/UserAtom.js';
 import subjectAtom from '../../atom/SubjectAtom.js';
 import assignmentAtom from '../../atom/AssignmentAtom.js';
 import { LuDelete } from "react-icons/lu";
-import { FaShare } from "react-icons/fa6";
-import { RiChatSmile3Line } from "react-icons/ri";
-import { SiGooglemeet } from "react-icons/si";
-import { IoIosAddCircleOutline } from "react-icons/io";
-import { RiInformation2Line } from "react-icons/ri";
 import Loader from '../../components/Loader/Loader';  
 import Sidebar from '../Sidebar/Sidebar.jsx';
+import Navbar2 from '../Navbar2/Navbar2.jsx';
 
 const ImageModal = ({ imageSrc, onClose }) => {
   return (
@@ -27,8 +23,6 @@ const ImageModal = ({ imageSrc, onClose }) => {
 };
 
 const Class = () => {
-  const [isCreateVisible, setIsCreateVisible] = useState(false);
-  const [isShareVisible, setIsShareVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
 
@@ -134,31 +128,6 @@ const Class = () => {
       console.error(error);
     }
   }
-
-  const handleCloseCreate = () => {
-    setIsCreateVisible(false);
-  };
-
-  const handleCreateButtonClick = () => {
-    setIsCreateVisible(!isCreateVisible);
-  };
-
-  const handleShareButtonClick = () => {
-    const link = `${window.location.origin}/join/${subjectId}`;
-    setShareableLink(link);
-    setIsShareVisible(true);
-  };
-
-  const handleCopyToClipboard = () => {
-    navigator.clipboard.writeText(shareableLink)
-      .then(() => {
-        alert('Link copied to clipboard!');
-      })
-      .catch((error) => {
-        console.error('Failed to copy link:', error);
-      });
-  };
-
   const handleNoticeClick = (imgSrc) => {
     setSelectedImage(imgSrc);
     setIsModalVisible(true);
@@ -172,13 +141,9 @@ const Class = () => {
     <div className="class-container">
       <Sidebar/>
       <main className="content">
-        <div className="navbar2">
-          <button className="chat-button" onClick={() => navigate(`/chat/${subjectId}`)}><RiChatSmile3Line /></button>
-          <button className="share-button" onClick={handleShareButtonClick}><FaShare /></button>
-          <button className="chat-button" onClick={() => navigate('/stream')}><SiGooglemeet /></button>
-          <button className="create-button" onClick={handleCreateButtonClick}><IoIosAddCircleOutline /></button>
-          <button className="info-button" onClick={() => navigate(`/info/${subjectId}`)}><RiInformation2Line /></button>
-        </div>
+        {console.log(teacher,"tex")}
+        <Navbar2 className="navbar2-class" subtecher={teacher} userId={user.username}/>
+
 
         <section className="notices-section">
           {loadingNotices ? (
@@ -220,22 +185,6 @@ const Class = () => {
           )}
         </section>
       </main>
-
-      {isShareVisible && (
-        <div className="share-popup">
-          <div className="share-popup-content">
-            <p>Share this link:</p>
-            <input type="text" value={shareableLink} readOnly />
-            <div className="share-popup-buttons">
-              <button onClick={handleCopyToClipboard}>Copy</button>
-              <button onClick={() => setIsShareVisible(false)}>Close</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {isCreateVisible && <Create subjectId={subjectId} handleClose={handleCloseCreate} />}
-      {isModalVisible && <ImageModal imageSrc={selectedImage} onClose={handleCloseModal} />}
     </div>
   );
 };

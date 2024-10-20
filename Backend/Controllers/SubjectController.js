@@ -307,35 +307,40 @@ const getAllstu = async(req,res)=>{
     try {
         const subId = req.params.subId;
         const getsub = await Subject.findById(subId);
-        console.log(getsub)
+        let teacher = await User.find({username:getsub.teacher})
         const {students} = getsub;
-            const getdetails = await User.find({ _id: { $in: students.map(student => student.stuId) } });
-        return res.status(200).json(getdetails);
+        const getdetails = await User.find({ _id: { $in: students.map(student => student.stuId)  } });
+        let alluser = {
+            teacher,
+            students:getdetails
+        }
+        return res.status(200).json(alluser);
     } catch (error) {
         console.log(error);
         return res.status(500).json({error:"error"})
     }
 }
 
-const updateUserDetails = async (req, res) => {
-    const { stuId } = req.params;
-    let { name, profileImage } = req.body;
+const updateUserD = async (req, res) => {
+
   
     try {
-        console.log(req.body)
-      if (!name || !profileImage) {
+      console.log("working",req.body);
+      let { stuId,username, image } = req.body;
+
+      if (!username || !image) {
         return res.status(400).json({ message: 'Name and profile image are required' });
       }
-      if(profileImage){
-        const uploadResponse = await cloudinary.uploader.upload(profileImage);
+      if(image){
+        const uploadResponse = await cloudinary.uploader.upload(image);
          
-        profileImage = uploadResponse.secure_url;
+        image = uploadResponse.secure_url;
       }
       const updatedUser = await User.findByIdAndUpdate(
         stuId,
         {
-          username: name,
-          image: profileImage,
+          username,
+          image
         },
         { new: true }  
       );
@@ -343,7 +348,7 @@ const updateUserDetails = async (req, res) => {
       if (!updatedUser) {
         return res.status(404).json({ message: 'User not found' });
       }
- 
+      console.log(updatedUser);
       res.status(200).json({ message: 'User updated successfully', updatedUser });
     } catch (error) {
       console.error('Error updating user:', error);
@@ -351,4 +356,4 @@ const updateUserDetails = async (req, res) => {
     }
   };
 
-export {Addsubject,getAllstu,GetSubject,updateUserDetails,AddNoticeOrAssignment,deleteAssignment,GetNotice,deleteSubject,GetAssignment,deleteNotice,addstudent};
+export {Addsubject,getAllstu,GetSubject,updateUserD,AddNoticeOrAssignment,deleteAssignment,GetNotice,deleteSubject,GetAssignment,deleteNotice,addstudent};
